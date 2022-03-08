@@ -17,43 +17,41 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public String getAllUser(Model model){
-        model.addAttribute("allUser", userService.getAllUser());
-        return "user";
+        model.addAttribute("users", userService.getAllUser());
+        return "user-list";
     }
 
-    @GetMapping("/addUser")
-    public String addUser(Model model){
+    @GetMapping("/user-create")
+    public String createUser(Model model){
         User user = new User();
         model.addAttribute("user", user);
-        model.addAttribute("save", true);
-        return "update";
+        return "user-create";
     }
 
-    @GetMapping("/saveUser")
-    public String saveUser(User user){
+    @PostMapping("/user-create")
+    public String createUser(User user){
         userService.addUser(user);
-        return "redirect:/";
+        return "redirect:/users";
     }
 
-    @GetMapping("/update/{id}")
-    public String editUser(@PathVariable(value = "id") int id, Model model){
+    @GetMapping("/user-delete/{id}")
+    public String deleteUser(@PathVariable("id") int id){
+        userService.deleteUser(id);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/user-update/{id}")
+    public String updateUserForm(@PathVariable(value = "id") int id, Model model){
         model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("save", false);
-        return "update";
+        return "user-update";
     }
 
-    @PostMapping("update/updateUser")
+    @PostMapping("/user-update")
     public String updateUser(User user){
         userService.updateUser(user);
-        return "redirect:/";
-    }
-
-    @GetMapping("deleteUser")
-    public String deleteUser(@RequestParam("id") int id){
-        userService.deleteUser(id);
-        return "redirect:/";
+        return "redirect:/users";
     }
 
 }
